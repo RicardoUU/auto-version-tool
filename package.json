@@ -1,6 +1,6 @@
 {
   "name": "auto-version-tool",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "根据git commit历史自动修改版本号的前端脚手架工具",
   "main": "dist/index.js",
   "bin": {
