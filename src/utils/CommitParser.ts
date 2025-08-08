@@ -27,20 +27,18 @@ export class CommitParser {
     
     const [, type, scopeMatch, breaking, subject] = match;
     const scope = scopeMatch ? scopeMatch.slice(1, -1) : undefined;
-    const body = lines.slice(1, -1).join('\n').trim() || undefined;
-    const footer = lines[lines.length - 1]?.trim() || undefined;
+    const body = lines.length > 1 ? lines.slice(1).join('\n').trim() || undefined : undefined;
     
     // 检查是否包含 BREAKING CHANGE
     const hasBreakingInBody = /BREAKING CHANGE/i.test(body || '');
-    const hasBreakingInFooter = /BREAKING CHANGE/i.test(footer || '');
     
     return {
       type,
       scope,
-      breaking: !!breaking || hasBreakingInBody || hasBreakingInFooter,
+      breaking: !!breaking || hasBreakingInBody,
       subject,
       body,
-      footer
+      footer: undefined
     };
   }
 
@@ -91,9 +89,10 @@ export class CommitParser {
       }
       
       formatted += ': ';
+      formatted += parsed.subject || commit.message.split('\n')[0];
+    } else {
+      formatted += ` ${parsed.subject || commit.message.split('\n')[0]}`;
     }
-    
-    formatted += parsed.subject || commit.message.split('\n')[0];
     
     return formatted;
   }
