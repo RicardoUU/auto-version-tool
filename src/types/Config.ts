@@ -15,8 +15,8 @@ export interface Config {
       patch: string[];
     };
     prerelease?: {
-      identifier: string;
-      enable: boolean;
+      identifier?: string;
+      enable?: boolean;
     };
   };
   

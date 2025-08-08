@@ -37,7 +37,7 @@ program
       });
       
       console.log(chalk.green('✅ 版本更新完成！'));
-    } catch (error) {
+    } catch (error: any) {
       console.error(chalk.red('❌ 错误:'), error.message);
       process.exit(1);
     }
@@ -52,7 +52,7 @@ program
       const tool = new AutoVersionTool();
       await tool.initConfig();
       console.log(chalk.green('✅ 配置文件创建成功！'));
-    } catch (error) {
+    } catch (error: any) {
       console.error(chalk.red('❌ 错误:'), error.message);
       process.exit(1);
     }
@@ -66,7 +66,7 @@ program
     try {
       const tool = new AutoVersionTool();
       await tool.showStatus(options.branch);
-    } catch (error) {
+    } catch (error: any) {
       console.error(chalk.red('❌ 错误:'), error.message);
       process.exit(1);
     }

@@ -174,7 +174,10 @@ export class ConfigService {
         ...defaultConfig.version,
         ...userConfig.version,
         bumpRules: { ...defaultConfig.version.bumpRules, ...userConfig.version?.bumpRules },
-        prerelease: { ...defaultConfig.version.prerelease, ...userConfig.version?.prerelease }
+        prerelease: { 
+          ...defaultConfig.version.prerelease, 
+          ...(userConfig.version?.prerelease || {})
+        }
       },
       changelog: { ...defaultConfig.changelog, ...userConfig.changelog },
       commitTypes: { ...defaultConfig.commitTypes, ...userConfig.commitTypes },

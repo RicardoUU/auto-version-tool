@@ -157,10 +157,7 @@ export class GitService {
     const tagName = `${this.config.git.tagPrefix}${version}`;
     const tagMessage = message || `Release version ${version}`;
     
-    await this.git.addTag(tagName, undefined, {
-      '-a': null,
-      '-m': tagMessage
-    });
+    await this.git.addAnnotatedTag(tagName, tagMessage);
   }
 
   async pushChanges(branch: string, withTags: boolean = true): Promise<void> {

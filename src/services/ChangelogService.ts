@@ -177,7 +177,7 @@ export class ChangelogService {
 * {{emoji}} {{message}} ([{{shortHash}}]({{commitUrl}}))
 {{/fixes}}
 
-{{/hasFeatures}}
+{{/hasFixes}}
 {{#hasOthers}}
 ### 📦 Other Changes
 
