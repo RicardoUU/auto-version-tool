@@ -1,0 +1,40 @@
+## [{{version}}]({{compareUrl}}) ({{date}})
+
+{{#hasBreaking}}
+### ⚠ BREAKING CHANGES
+
+{{#breaking}}
+* {{emoji}} {{message}} ([{{shortHash}}]({{commitUrl}}))
+{{/breaking}}
+
+{{/hasBreaking}}
+{{#hasFeatures}}
+### ✨ Features
+
+{{#features}}
+* {{emoji}} {{message}} ([{{shortHash}}]({{commitUrl}}))
+{{/features}}
+
+{{/hasFeatures}}
+{{#hasFixes}}
+### 🐛 Bug Fixes
+
+{{#fixes}}
+* {{emoji}} {{message}} ([{{shortHash}}]({{commitUrl}}))
+{{/fixes}}
+
+{{/hasFixes}}
+{{#hasOthers}}
+### 📦 Other Changes
+
+{{#others}}
+{{#title}}
+#### {{title}}
+
+{{/title}}
+{{#commits}}
+* {{emoji}} {{message}} ([{{shortHash}}]({{commitUrl}}))
+{{/commits}}
+{{/others}}
+
+{{/hasOthers}}
