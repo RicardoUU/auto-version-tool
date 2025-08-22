@@ -88,7 +88,11 @@ export class ConfigService {
   };
 
   loadConfig(configPath?: string): Config {
-    const configFile = configPath || this.findConfigFile();
+    // 允许传入相对路径，这里统一转换为绝对路径，避免 require 相对 dist 目录解析失败
+    let configFile = configPath || this.findConfigFile();
+    if (configFile && !path.isAbsolute(configFile)) {
+      configFile = path.resolve(process.cwd(), configFile);
+    }
     
     if (!configFile || !fs.existsSync(configFile)) {
       console.log('🔧 使用默认配置');
@@ -99,7 +103,7 @@ export class ConfigService {
       console.log(`📄 加载配置文件: ${configFile}`);
       
       // 根据文件扩展名加载配置
-      const config = this.loadConfigFromFile(configFile);
+  const config = this.loadConfigFromFile(configFile);
       
       // 合并默认配置
       return this.mergeConfig(this.defaultConfig, config);

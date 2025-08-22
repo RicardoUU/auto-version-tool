@@ -59,29 +59,24 @@ export class GitService {
 
   async getCommitsSinceLastTag(branch: string): Promise<GitCommit[]> {
     const latestTag = await this.getLatestTag();
-    
-    let range: string;
-    if (latestTag) {
-      range = `${latestTag}..${branch}`;
-    } else {
-      range = branch;
-    }
-
     try {
-      const log = await this.git.log({
-        from: latestTag || undefined,
-        to: branch,
-        format: {
-          hash: '%H',
-          date: '%ai',
-          message: '%s',
-          author_name: '%an',
-          author_email: '%ae',
-          refs: '%D'
-        }
-      });
-
-      return log.all.map(commit => ({
+      if (latestTag) {
+        // 获取从最新标签(不含)到当前分支HEAD(含)的提交
+        const log = await this.git.log({ from: latestTag, to: branch });
+        return log.all
+          .filter(c => c.hash !== log.latest?.hash || log.latest?.hash !== latestTag) // 保守过滤
+          .map(commit => ({
+            hash: commit.hash,
+            date: commit.date,
+            message: commit.message,
+            author_name: commit.author_name,
+            author_email: commit.author_email,
+            refs: commit.refs
+          }));
+      }
+      // 没有标签时，返回除首次提交外的全部提交以避免把初始化提交也当成“待发布”
+      const allLog = await this.git.log();
+      return allLog.all.map(commit => ({
         hash: commit.hash,
         date: commit.date,
         message: commit.message,
