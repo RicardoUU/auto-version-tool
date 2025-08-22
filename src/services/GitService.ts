@@ -1,6 +1,6 @@
-import simpleGit, { SimpleGit } from 'simple-git';
-import { Config } from '../types/Config';
-import { GitCommit, GitTag, GitBranch } from '../types/Git';
+import simpleGit, { SimpleGit } from "simple-git";
+import { Config } from "../types/Config";
+import { GitBranch, GitCommit, GitTag } from "../types/Git";
 
 export class GitService {
   private git: SimpleGit;
@@ -27,13 +27,13 @@ export class GitService {
 
   async checkoutBranch(branch: string): Promise<void> {
     const branches = await this.git.branchLocal();
-    
+
     if (branches.all.includes(branch)) {
       await this.git.checkout(branch);
     } else {
       // 尝试检出远程分支
       try {
-        await this.git.checkout(['-b', branch, `origin/${branch}`]);
+        await this.git.checkout(["-b", branch, `origin/${branch}`]);
       } catch {
         throw new Error(`分支 '${branch}' 不存在`);
       }
@@ -42,13 +42,13 @@ export class GitService {
 
   async getCurrentBranch(): Promise<string> {
     const status = await this.git.status();
-    return status.current || 'unknown';
+    return status.current || "unknown";
   }
 
   async getLatestTag(): Promise<string | null> {
     try {
-      const tags = await this.git.tags(['--sort=-version:refname']);
-      const tagList = tags.all.filter(tag => 
+      const tags = await this.git.tags(["--sort=-version:refname"]);
+      const tagList = tags.all.filter((tag) =>
         tag.startsWith(this.config.git.tagPrefix)
       );
       return tagList[0] || null;
@@ -64,28 +64,30 @@ export class GitService {
         // 获取从最新标签(不含)到当前分支HEAD(含)的提交
         const log = await this.git.log({ from: latestTag, to: branch });
         return log.all
-          .filter(c => c.hash !== log.latest?.hash || log.latest?.hash !== latestTag) // 保守过滤
-          .map(commit => ({
+          .filter(
+            (c) => c.hash !== log.latest?.hash || log.latest?.hash !== latestTag
+          ) // 保守过滤
+          .map((commit) => ({
             hash: commit.hash,
             date: commit.date,
             message: commit.message,
             author_name: commit.author_name,
             author_email: commit.author_email,
-            refs: commit.refs
+            refs: commit.refs,
           }));
       }
       // 没有标签时，返回除首次提交外的全部提交以避免把初始化提交也当成“待发布”
       const allLog = await this.git.log();
-      return allLog.all.map(commit => ({
+      return allLog.all.map((commit) => ({
         hash: commit.hash,
         date: commit.date,
         message: commit.message,
         author_name: commit.author_name,
         author_email: commit.author_email,
-        refs: commit.refs
+        refs: commit.refs,
       }));
     } catch (error) {
-      console.error('获取提交历史失败:', error);
+      console.error("获取提交历史失败:", error);
       return [];
     }
   }
@@ -96,20 +98,20 @@ export class GitService {
         from,
         to,
         format: {
-          hash: '%H',
-          date: '%ai', 
-          message: '%s',
-          author_name: '%an',
-          author_email: '%ae'
-        }
+          hash: "%H",
+          date: "%ai",
+          message: "%s",
+          author_name: "%an",
+          author_email: "%ae",
+        },
       });
 
-      return log.all.map(commit => ({
+      return log.all.map((commit) => ({
         hash: commit.hash,
         date: commit.date,
         message: commit.message,
         author_name: commit.author_name,
-        author_email: commit.author_email
+        author_email: commit.author_email,
       }));
     } catch {
       return [];
@@ -118,17 +120,21 @@ export class GitService {
 
   async getAllTags(): Promise<GitTag[]> {
     try {
-      const tags = await this.git.tags(['--sort=-version:refname', '-l', '--format=%(refname:short)|%(objectname)|%(creatordate:iso8601)|%(contents:lines=1)']);
-      
+      const tags = await this.git.tags([
+        "--sort=-version:refname",
+        "-l",
+        "--format=%(refname:short)|%(objectname)|%(creatordate:iso8601)|%(contents:lines=1)",
+      ]);
+
       return tags.all
-        .filter(tag => tag.startsWith(this.config.git.tagPrefix))
-        .map(tagInfo => {
-          const [name, hash, date, message] = tagInfo.split('|');
+        .filter((tag) => tag.startsWith(this.config.git.tagPrefix))
+        .map((tagInfo) => {
+          const [name, hash, date, message] = tagInfo.split("|");
           return {
             name,
             hash,
             date,
-            message: message || undefined
+            message: message || undefined,
           };
         });
     } catch {
@@ -140,7 +146,7 @@ export class GitService {
     // 添加更改的文件
     await this.git.add([
       this.config.files.packageJson,
-      this.config.files.changelogFile
+      this.config.files.changelogFile,
     ]);
 
     // 提交更改
@@ -151,32 +157,32 @@ export class GitService {
   async createTag(version: string, message?: string): Promise<void> {
     const tagName = `${this.config.git.tagPrefix}${version}`;
     const tagMessage = message || `Release version ${version}`;
-    
+
     await this.git.addAnnotatedTag(tagName, tagMessage);
   }
 
   async pushChanges(branch: string, withTags: boolean = true): Promise<void> {
-    await this.git.push('origin', branch);
-    
+    await this.git.push("origin", branch);
+
     if (withTags) {
-      await this.git.pushTags('origin');
+      await this.git.pushTags("origin");
     }
   }
 
   async getBranches(): Promise<GitBranch[]> {
     const branches = await this.git.branchLocal();
-    
-    return branches.all.map(name => ({
+
+    return branches.all.map((name) => ({
       name,
       current: name === branches.current,
-      commit: '' // 可以进一步获取每个分支的最新提交
+      commit: "", // 可以进一步获取每个分支的最新提交
     }));
   }
 
   async getRemoteUrl(): Promise<string | null> {
     try {
       const remotes = await this.git.getRemotes(true);
-      const origin = remotes.find(remote => remote.name === 'origin');
+      const origin = remotes.find((remote) => remote.name === "origin");
       return origin?.refs?.fetch || null;
     } catch {
       return null;
@@ -192,15 +198,15 @@ export class GitService {
     try {
       const log = await this.git.log({ maxCount: 1 });
       const commit = log.latest;
-      
+
       if (!commit) return null;
-      
+
       return {
         hash: commit.hash,
         date: commit.date,
         message: commit.message,
         author_name: commit.author_name,
-        author_email: commit.author_email
+        author_email: commit.author_email,
       };
     } catch {
       return null;
