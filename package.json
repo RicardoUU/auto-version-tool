@@ -1,16 +1,34 @@
 {
   "name": "auto-version-tool",
-  "version": "1.2.0",
-  "description": "根据git commit历史自动修改版本号的前端脚手架工具",
+  "version": "1.2.1",
+  "description": "根据git commit历史自动修改版本号并生成changelog的CLI工具 (Automatically bump version & generate changelog based on git commits)",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "auto-version": "dist/cli.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "auto-version.config.js",
+    "templates"
+  ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/cli.js",
     "test": "jest",
+    "prepublishOnly": "npm run build && npm test",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -19,8 +37,18 @@
     "changelog",
     "semantic-version",
     "frontend",
-    "cli"
+    "cli",
+    "conventional-commits",
+    "semantic-release"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RicardoUU/auto-version-tool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RicardoUU/auto-version-tool/issues"
+  },
+  "homepage": "https://github.com/RicardoUU/auto-version-tool#readme",
   "author": "Ricardo",
   "license": "MIT",
   "dependencies": {
@@ -43,6 +71,9 @@
     "ts-jest": "^29.1.1"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=16.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
