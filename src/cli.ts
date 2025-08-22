@@ -28,6 +28,7 @@ program
     try {
       console.log(chalk.blue("🚀 启动自动版本工具..."));
 
+      // 测试提交
       const tool = new AutoVersionTool(options.config);
       await tool.run({
         branch: options.branch,
