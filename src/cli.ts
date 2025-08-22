@@ -24,6 +24,8 @@ program
   .option("--skip-changelog", "跳过changelog生成")
   .option("--skip-commit", "跳过自动提交")
   .option("--skip-tag", "跳过自动标签")
+  .option("-y, --yes", "非交互模式，自动确认执行")
+  .option("--push", "版本更新后自动 push 到远程")
   .action(async (options) => {
     try {
       console.log(chalk.blue("🚀 启动自动版本工具..."));
@@ -37,6 +39,8 @@ program
         skipChangelog: options.skipChangelog,
         skipCommit: options.skipCommit,
         skipTag: options.skipTag,
+        yes: options.yes,
+        push: options.push,
       });
 
       console.log(chalk.green("✅ 版本更新完成！"));

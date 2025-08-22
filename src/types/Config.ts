@@ -61,6 +61,8 @@ export interface RunOptions {
   skipChangelog: boolean;
   skipCommit: boolean;
   skipTag: boolean;
+  yes?: boolean; // 非交互模式，自动确认
+  push?: boolean; // 版本更新后自动 push
 }
 
 export interface CommitInfo {

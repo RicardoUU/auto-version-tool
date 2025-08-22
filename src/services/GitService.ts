@@ -169,6 +169,14 @@ export class GitService {
     }
   }
 
+  async safePush(branch: string, withTags: boolean = true): Promise<void> {
+    try {
+      await this.pushChanges(branch, withTags);
+    } catch (e) {
+      console.warn('⚠️  push 失败，请手动执行 git push:', (e as any)?.message || e);
+    }
+  }
+
   async getBranches(): Promise<GitBranch[]> {
     const branches = await this.git.branchLocal();
 

@@ -66,18 +66,21 @@ export class AutoVersionTool {
     }
 
     // 确认操作
-    const { confirm } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'confirm',
-        message: '确认执行版本更新？',
-        default: true
+    if (!options.yes) {
+      const { confirm } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'confirm',
+          message: '确认执行版本更新？',
+          default: true
+        }
+      ]);
+      if (!confirm) {
+        console.log(chalk.yellow('❌ 操作已取消'));
+        return;
       }
-    ]);
-
-    if (!confirm) {
-      console.log(chalk.yellow('❌ 操作已取消'));
-      return;
+    } else {
+      console.log(chalk.gray('✅ 已启用 --yes 自动确认'));
     }
 
     // 执行版本更新
@@ -247,6 +250,12 @@ export class AutoVersionTool {
       if (!options.skipTag) {
         console.log(chalk.blue('🏷️  创建标签...'));
         await this.gitService.createTag(versionInfo.next);
+      }
+
+      // push
+      if (options.push && !options.dryRun) {
+        console.log(chalk.blue('📤 推送到远程...'));
+        await this.gitService.safePush(options.branch, !options.skipTag);
       }
 
       console.log(chalk.green(`🎉 版本 ${versionInfo.next} 发布成功！`));
