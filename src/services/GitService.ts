@@ -173,7 +173,10 @@ export class GitService {
     try {
       await this.pushChanges(branch, withTags);
     } catch (e) {
-      console.warn('⚠️  push 失败，请手动执行 git push:', (e as any)?.message || e);
+      console.warn(
+        "⚠️  push 失败，请手动执行 git push:",
+        (e as any)?.message || e
+      );
     }
   }
 

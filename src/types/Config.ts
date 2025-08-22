@@ -5,10 +5,10 @@ export interface Config {
     remoteOrigin: string;
     tagPrefix: string;
   };
-  
+
   // 版本控制配置
   version: {
-    strategy: 'semantic' | 'timestamp' | 'build';
+    strategy: "semantic" | "timestamp" | "build";
     bumpRules: {
       major: string[];
       minor: string[];
@@ -19,32 +19,32 @@ export interface Config {
       enable?: boolean;
     };
   };
-  
+
   // Changelog配置
   changelog: {
     outputFile: string;
     template: string;
     includeTypes: string[];
     skipEmptyReleases: boolean;
-    groupBy: 'type' | 'scope' | 'none';
+    groupBy: "type" | "scope" | "none";
   };
-  
+
   // Commit类型配置
   commitTypes: {
     [key: string]: {
       title: string;
-      semver: 'major' | 'minor' | 'patch' | 'none';
+      semver: "major" | "minor" | "patch" | "none";
       emoji?: string;
     };
   };
-  
+
   // 文件配置
   files: {
     packageJson: string;
     versionFile?: string;
     changelogFile: string;
   };
-  
+
   // 钩子配置
   hooks: {
     preVersion?: string;
@@ -56,7 +56,7 @@ export interface Config {
 
 export interface RunOptions {
   branch: string;
-  versionType: 'patch' | 'minor' | 'major' | 'auto';
+  versionType: "patch" | "minor" | "major" | "auto";
   dryRun: boolean;
   skipChangelog: boolean;
   skipCommit: boolean;
@@ -81,7 +81,7 @@ export interface CommitInfo {
 export interface VersionInfo {
   current: string;
   next: string;
-  type: 'major' | 'minor' | 'patch';
+  type: "major" | "minor" | "patch";
 }
 
 export interface ChangelogEntry {
